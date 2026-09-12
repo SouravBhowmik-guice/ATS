@@ -85,15 +85,24 @@ export async function POST(request: NextRequest) {
       process.env.GEMINI_API_KEY !== "your-gemini-key-here",
     );
     const hasServerAnthropicKey = Boolean(process.env.ANTHROPIC_API_KEY);
-    if (!mockLLM && provider === "gemini" && !apiKey && !hasServerGeminiKey)
+    const workerUrl = process.env.WORKER_URL;
+    const workerHandlesLLM = Boolean(workerUrl);
+    if (
+      !mockLLM &&
+      provider === "gemini" &&
+      !apiKey &&
+      !hasServerGeminiKey &&
+      !workerHandlesLLM
+    )
       throw new Error(
-        "Add a Gemini API key or configure GEMINI_API_KEY on the server.",
+        "Add a Gemini API key or configure GEMINI_API_KEY on the server, or configure WORKER_URL.",
       );
     if (
       !mockLLM &&
       provider === "anthropic" &&
       !anthropicApiKey &&
-      !hasServerAnthropicKey
+      !hasServerAnthropicKey &&
+      !workerHandlesLLM
     )
       throw new Error(
         "Add a Claude API key or configure ANTHROPIC_API_KEY on the server.",
@@ -115,7 +124,6 @@ export async function POST(request: NextRequest) {
     };
     jobs.set(id, job);
 
-    const workerUrl = process.env.WORKER_URL;
     if (workerUrl) {
       const workerResponse = await fetch(workerUrl, {
         method: "POST",
