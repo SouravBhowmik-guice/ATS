@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+data/applyflow.db
+data/applyflow.db-wal
+data/applyflow.db-shm
+*.log
+.DS_Store
+.claude/settings.local.json
+
+# webcmd (vendored dependency)
+webcmd/
+webcmd/node_modules/
+webcmd/dist/
+webcmd/bun.lock

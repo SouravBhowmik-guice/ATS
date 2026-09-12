@@ -1,0 +1,35 @@
+{
+  "name": "applyflow",
+  "version": "1.0.0",
+  "description": "Agentic job-application assistant that navigates ATS platforms, evaluates fit, drafts answers, and pre-fills forms for human review.",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "apply": "tsx src/index.ts apply",
+    "history": "tsx src/index.ts history",
+    "test:smoke": "tsx src/test-smoke.ts",
+    "test:scrape": "tsx src/test-greenhouse.ts",
+    "webcmd:setup": "cd webcmd && npm install && npm run build",
+    "webcmd:doctor": "node ./webcmd/dist/src/main.js doctor"
+  },
+  "bin": {
+    "applyflow": "./dist/index.js"
+  },
+  "keywords": ["ats", "job-application", "webcmd", "playwright", "automation", "greenhouse", "lever"],
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "better-sqlite3": "^11.6.0",
+    "cheerio": "^1.0.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

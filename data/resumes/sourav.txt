@@ -1,0 +1,45 @@
+Sourav Bhowmik
+[8794440773] | [bhowmiksourav0123@gmail.com] | [www.linkedin.com/in/sourav-bhowmik05] | [https://github.com/SouravBhowmik-guice]
+Gwalior, Madhya Pradesh
+
+Professional Summary
+Driven Computer Science and Engineering student with expertise in full-stack web development, decentralized systems. Proficient in React, Node.js, MongoDB, TypeScript, and C++, with additional experience in Supabase, Vercel, Docker, and Vite. Experienced in developing complex algorithmic systems, peer-to-peer applications, and scalable backend architecture. Seeking a role to leverage technical problem-solving skills and deliver impactful software solutions.
+Education
+Bachelor of Technology in Computer Science and Engineering
+Rustamji Institute of Technology – Gwalior, Madhya Pradesh
+[2025-2029]
+
+Technical Skills
+ Programming Languages: C++, TypeScript, JavaScript, HTML, CSS, Python
+ Frameworks & Libraries: React, Node.js, WebAssembly (Wasm)
+ Databases & Backend: MongoDB, Supabase
+ Cloud, Deployment & Containerization: Docker, Vercel, AWS Academy Generative AI       Foundations
+ Developer Tools & Build Systems: Git, GitHub, Visual Studio Code, Vite
+
+Technical Projects
+Algorithm Trading Backtester
+Technologies: C++, WebAssembly (Wasm)
+●	Developed a robust backtesting engine leveraging C++ compiled to WebAssembly to execute rapid market simulations.
+●	Optimized data processing and execution logic to efficiently handle and analyze large historical datasets.
+Web-Based Real-Time Physics Engine
+Technologies: C++, WebAssembly, React, TypeScript, Vite, Vercel
+●	Architected and developed a web-based physics engine capable of real-time simulation, utilizing Vite for lightning-fast frontend bundling and optimized module replacement.
+●	Implemented core physics computations using C++ and WebAssembly for optimal performance, integrating a responsive user interface with React and TypeScript.
+
+Disaster Management Mesh 
+Technologies: Python, Vite, Peer-to-Peer (P2P) Networking 
+●	Built a resilient communication network platform utilizing peer-to-peer networking to facilitate coordination and resource allocation during disaster scenarios.
+●	Leveraged Vite to streamline the React frontend build process and deployed architecture via Vercel to ensure reliable, highly available information flow between decentralized nodes.
+Self-Hosted Telemetry
+Technologies: Node.js, Mongo DB, Supabase, Docker
+●	Designed and deployed a custom telemetry observability platform for monitoring application performance and tracking system metrics.
+●	Engineered backend architecture utilizing MongoDB and Supabase to securely aggregate, store, and visualize data logs for real-time system diagnostics.
+●	Containerized application environments using Docker to ensure consistent deployment and seamless hosting.
+
+Experience & Leadership
+Student Placement Coordinator | Rustamji Institute of Technology
+[May, 2025] – Present
+●	Manage and coordinate campus placement drives and recruitment events for multiple visiting companies.
+●	Facilitate communication between corporate recruiters, college administration, and the student body to ensure seamless execution of placement activities.
+
+
