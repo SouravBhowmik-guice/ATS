@@ -5,7 +5,12 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.cli.json",
+    "build:worker": "tsc -p tsconfig.worker.json",
+    "build:web": "next build",
+    "dev:web": "next dev",
+    "start:web": "next start",
+    "start:worker": "node dist-worker/worker/server.js",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
     "apply": "tsx src/index.ts apply",
@@ -18,17 +23,40 @@
   "bin": {
     "applyflow": "./dist/index.js"
   },
-  "keywords": ["ats", "job-application", "webcmd", "playwright", "automation", "greenhouse", "lever"],
+  "keywords": [
+    "ats",
+    "job-application",
+    "webcmd",
+    "playwright",
+    "automation",
+    "greenhouse",
+    "lever"
+  ],
   "license": "MIT",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.125.0",
     "@google/generative-ai": "^0.21.0",
+    "@upstash/redis": "^1.38.4",
     "better-sqlite3": "^11.6.0",
     "cheerio": "^1.0.0",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.468.0",
+    "next": "^15.5.7",
+    "openai": "^7.15.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "unpdf": "^1.8.1"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.14",
     "@types/better-sqlite3": "^7.6.12",
     "@types/node": "^22.10.0",
+    "@types/react": "^19.1.14",
+    "@types/react-dom": "^19.1.9",
+    "playwright": "^1.63.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.14",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   }

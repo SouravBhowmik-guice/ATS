@@ -33,8 +33,17 @@ export function parseResume(filePath: string): ResumeData {
   // Extract sections by detecting headers
   const sections = splitIntoSections(lines);
 
-  const skills = extractSkills(sections.skills || []);
-  const experience = extractExperience(sections.experience || sections["work experience"] || []);
+  const skills = extractSkills([
+    ...(sections.skills || []),
+    ...(sections["technical skills"] || []),
+    ...(sections.technologies || []),
+  ]);
+  const experience = extractExperience([
+    ...(sections.experience || []),
+    ...(sections["work experience"] || []),
+    ...(sections.employment || []),
+    ...(sections["experience & leadership"] || []),
+  ]);
   const education = extractEducation(sections.education || []);
   const summary =
     sections.summary?.join(" ") ||
@@ -89,6 +98,8 @@ function splitIntoSections(lines: string[]): Record<string, string[]> {
     "languages",
     "interests",
     "references",
+    "experience & leadership",
+    "technical projects",
   ];
 
   for (const line of lines) {
@@ -105,7 +116,7 @@ function splitIntoSections(lines: string[]): Record<string, string[]> {
       line.length > 2;
 
     if (isHeader || looksLikeHeader) {
-      currentSection = lower.replace(/[:]+$/, "").trim();
+      currentSection = normalizeSectionName(lower);
       sections[currentSection] = [];
     } else if (line.length > 0) {
       sections[currentSection].push(line);
@@ -113,6 +124,14 @@ function splitIntoSections(lines: string[]): Record<string, string[]> {
   }
 
   return sections;
+}
+
+function normalizeSectionName(section: string): string {
+  const normalized = section.replace(/[:]+$/, "").trim();
+  if (normalized === "technical projects") return "projects";
+  if (normalized === "experience & leadership") return "experience & leadership";
+  if (normalized === "technical skills" || normalized === "technologies") return "technical skills";
+  return normalized;
 }
 
 /**

@@ -152,3 +152,48 @@ data/
 - [ ] Workday multi-step form wizard support
 - [ ] Interactive mode with inquirer prompts
 - [ ] "Apply to N recent matching jobs" batch mode
+
+## Web Application Architecture
+
+ATS-Buster now has a Next.js App Router frontend layered over the existing ApplyFlow automation engine. The browser worker stays outside Vercel because webcmd owns a visible Chrome session and can exceed serverless execution and binary limits.
+
+```text
+Browser -> Next.js dashboard on Vercel -> WORKER_URL -> dedicated Node worker
+                                                     -> evaluator -> explorer -> drafter -> filler
+                                                     -> safe-stop before Submit
+```
+
+### Frontend files
+
+| File | Responsibility |
+|---|---|
+| `src/app/page.tsx` | Dashboard input flow, settings, staged execution view |
+| `src/components/ResumeDropzone.tsx` | PDF-only drag-and-drop uploader |
+| `src/components/ExecutionConsole.tsx` | Animated terminal-style progress log |
+| `src/components/HumanVerificationModal.tsx` | Field preview and manual approval gate |
+| `src/app/api/apply/route.ts` | Node runtime validation, PDF extraction, worker dispatch, SSE status stream |
+
+### Local web development
+
+```bash
+npm run dev:web
+```
+
+Open `http://localhost:3000`. The dashboard can run its visual flow without a worker, but live browser automation requires the worker configuration below.
+
+### Vercel and worker configuration
+
+Deploy the Next.js app to Vercel and set:
+
+```env
+WORKER_URL=https://your-worker.example.com/apply
+WORKER_SHARED_SECRET=replace-with-a-server-side-secret
+PROGRESS_CALLBACK_URL=https://your-vercel-app.vercel.app/api/apply/status
+PROGRESS_CALLBACK_SECRET=replace-with-the-same-secret
+```
+
+The worker accepts the JSON payload posted by `/api/apply`, writes the PDF to temporary storage, and invokes the shared runner in `src/worker/run-application.ts`. It publishes progress events to `PROGRESS_CALLBACK_URL`; the current callback store is suitable for local development, while production should replace it with Redis or a database for multi-instance durability.
+
+`GEMINI_API_KEY` is accepted for a single run from the settings panel and is never persisted by the Next.js route. For production, prefer a server-side secret or authenticated secret vault. `MOCK_LLM` and `SLOW_MO` are passed to the worker as per-run settings.
+
+The application never clicks Submit automatically. The worker stops at the existing `pauseBeforeSubmit` gateway, and the frontend presents a human verification screen before any final action.

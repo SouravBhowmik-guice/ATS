@@ -1,5 +1,6 @@
 import { cfg } from "../config.js";
-import { getGeminiModel } from "../llm/client.js";
+import { getLLM } from "../llm/provider.js";
+import { parseJsonFromText } from "../utils/llm.js";
 import type { JobPosting, ResumeData, JobEvaluation } from "../types/index.js";
 import { resumeToPromptSummary } from "./resume-parser.js";
 
@@ -43,9 +44,6 @@ export async function evaluateJobFit(
     };
   }
 
-  // Low temperature for consistent scoring.
-  const model = getGeminiModel({ temperature: 0.3 });
-
   const resumeSummary = resumeToPromptSummary(resume);
 
   const prompt = `${SCORING_PROMPT}
@@ -68,15 +66,12 @@ ${resumeSummary}
 
 Analyze the match and return the JSON evaluation.`;
 
-  const result = await model.generateContent(prompt);
-  const response = result.response;
-  const text = response.text();
+  // Low temperature for consistent scoring.
+  const text = await getLLM().generate(prompt, { temperature: 0.3, json: true });
 
   // Parse the JSON response
   try {
-    // Handle potential markdown code blocks
-    const jsonStr = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    const evaluation: JobEvaluation = JSON.parse(jsonStr);
+    const evaluation: JobEvaluation = parseJsonFromText(text) as JobEvaluation;
 
     // Clamp score
     evaluation.score = Math.max(1, Math.min(10, Math.round(evaluation.score)));

@@ -21,8 +21,15 @@ export function ensureDirectories(): void {
 }
 
 export const cfg = {
+  // LLM provider selection. Defaults to Gemini; OpenAI / Anthropic are opt-in
+  // backends selectable via LLM_PROVIDER (their SDKs load lazily).
+  llmProvider: (process.env.LLM_PROVIDER || "gemini").toLowerCase(),
   // Gemini key is optional in MOCK_LLM mode (browser pipeline can run without it).
   geminiApiKey: process.env.GEMINI_API_KEY || "",
+  openaiApiKey: process.env.OPENAI_API_KEY || "",
+  openaiModel: optional("OPENAI_MODEL", "gpt-4o"),
+  anthropicApiKey: process.env.ANTHROPIC_API_KEY || "",
+  anthropicModel: optional("ANTHROPIC_MODEL", "claude-sonnet-5"),
   mockLLM: process.env.MOCK_LLM === "true",
   resumePath: resolve(optional("RESUME_PATH", "./data/resumes/placeholder.txt")),
   headless: process.env.HEADLESS === "true",
@@ -49,4 +56,18 @@ export const cfg = {
     submitSelector: 'button[data-qa="btn-submit"], button[type="submit"]',
     resumeSelector: 'input[type="file"]',
   },
-} as const;
+};
+
+export function applyRuntimeSettings(settings: {
+  llmProvider?: string;
+  mockLLM?: boolean;
+  slowMo?: number;
+  geminiApiKey?: string;
+  anthropicApiKey?: string;
+}): void {
+  if (settings.llmProvider) cfg.llmProvider = settings.llmProvider.toLowerCase();
+  if (typeof settings.mockLLM === "boolean") cfg.mockLLM = settings.mockLLM;
+  if (typeof settings.slowMo === "number") cfg.slowMo = settings.slowMo;
+  if (settings.geminiApiKey) cfg.geminiApiKey = settings.geminiApiKey;
+  if (settings.anthropicApiKey) cfg.anthropicApiKey = settings.anthropicApiKey;
+}

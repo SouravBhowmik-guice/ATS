@@ -1,5 +1,9 @@
 node_modules/
 dist/
+dist-worker/
+.worker-resumes/
+.next/
+*.tsbuildinfo
 .env
 data/applyflow.db
 data/applyflow.db-wal

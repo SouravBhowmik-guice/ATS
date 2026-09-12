@@ -1,5 +1,6 @@
 import { cfg } from "../config.js";
-import { getGeminiModel } from "../llm/client.js";
+import { getLLM } from "../llm/provider.js";
+import { parseJsonFromText } from "../utils/llm.js";
 import type { FormField, DraftedAnswer, JobPosting, ResumeData } from "../types/index.js";
 import { resumeToPromptSummary } from "../evaluator/resume-parser.js";
 
@@ -57,8 +58,6 @@ export async function draftAnswers(
       }));
   }
 
-  const model = getGeminiModel();
-
   const resumeSummary = resumeToPromptSummary(resume);
 
   const questionsList = customQuestions
@@ -86,13 +85,10 @@ ${questionsList}
 
 Draft answers for each question above. Return the JSON array.`;
 
-  const result = await model.generateContent(prompt);
-  const response = result.response;
-  const text = response.text();
+  const text = await getLLM().generate(prompt, { json: true });
 
   try {
-    const jsonStr = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    const answers: DraftedAnswer[] = JSON.parse(jsonStr);
+    const answers: DraftedAnswer[] = parseJsonFromText(text) as DraftedAnswer[];
 
     // Validate and log
     for (const answer of answers) {
