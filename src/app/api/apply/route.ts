@@ -191,11 +191,18 @@ export async function GET(request: NextRequest) {
     start(controller) {
       let closed = false;
       let lastPayload = "";
+      let heartbeat: ReturnType<typeof setInterval> | undefined;
+      let timeout: ReturnType<typeof setTimeout> | undefined;
       const close = () => {
         if (closed) return;
         closed = true;
-        clearInterval(heartbeat);
-        controller.close();
+        if (heartbeat) clearInterval(heartbeat);
+        if (timeout) clearTimeout(timeout);
+        try {
+          controller.close();
+        } catch {
+          // The client may have closed the stream first.
+        }
       };
       const send = () => {
         const job = jobs.get(jobId);
@@ -212,13 +219,13 @@ export async function GET(request: NextRequest) {
         }
       };
       send();
-      const heartbeat = setInterval(() => {
+      heartbeat = setInterval(() => {
         send();
         if (jobs.get(jobId)?.status === "failed") {
           close();
         }
       }, 1000);
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         close();
       }, 25_000);
     },
